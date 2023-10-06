@@ -1,10 +1,10 @@
-# clrpltmngr README
+# color-squares README
 
-Welcome to the `clrpltmngr` extension for VS Code. This extension provides a comprehensive color palette manager, designed to streamline and enhance your design and development workflow in Visual Studio Code.
+Welcome to the `color-squares` extension for VS Code. This extension provides a comprehensive color palette manager, designed to streamline and enhance your design and development workflow in Visual Studio Code.
 
 ## Features
 
-Explore the powerful features of `clrpltmngr`:
+Explore the powerful features of `color-squares`:
 
 - **Automatic Tints and Shades Generation**: Enter a primary color and automatically generate 15 tints and 15 shades.
   ![Automatic Tints and Shades Generation](img/add_new_color.png)
@@ -15,13 +15,13 @@ Explore the powerful features of `clrpltmngr`:
 
 ## Requirements
 
-`clrpltmngr` runs seamlessly with no additional requirements. However, if future versions incorporate dependencies, they will be listed in this section.
+`color-squares` runs seamlessly with no additional requirements. However, if future versions incorporate dependencies, they will be listed in this section.
 
 ## Extension Settings
 
-`clrpltmngr` integrates the following settings for a tailored user experience:
+`color-squares` integrates the following settings for a tailored user experience:
 
-- `clrpltmngr.enable`: Toggle the extension on/off.
+- `color-squares.enable`: Toggle the extension on/off.
 
 ## Known Issues
 
@@ -29,14 +29,14 @@ Any identified issues or potential bugs will be listed here to keep users inform
 
 ## Release Notes
 
-Stay updated with the improvements and fixes made to `clrpltmngr`:
+Stay updated with the improvements and fixes made to `color-squares`:
 
 ### 0.0.1
 
-- Initial release of `clrpltmngr`.
+- Initial release of `color-squares`.
 
 ### 0.0.3
 
 - Resolved issue : same color added twice lead to displaying error.
 
-**Enjoy using `clrpltmngr`!**
+**Enjoy using `color-squares`!**
