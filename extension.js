@@ -41,7 +41,9 @@ function activate(context) {
   });
   vscode.commands.registerCommand("deleteColor", (color) => {
     colorDataProvider.deleteColor(color, color.tooltip);
-    vscode.window.showInformationMessage(`Deleted ${color}!`);
+    vscode.window.showInformationMessage(
+      `Deleted ${color.id} from ${color.tooltip}!`
+    );
   });
 }
 
@@ -71,6 +73,12 @@ class ColorSquaresProvider {
     this.colors = { Primary: [], Tints: [], Shades: [], Other: [] };
   }
   addColor(color, type) {
+    if (type === "Primary" || type === "Other") {
+      const index = this.colors[type].indexOf(color);
+      if (index != -1) {
+        return;
+      }
+    }
     this.colors[type].push(color);
     vscode.window.createTreeView("colorSquaresView", {
       treeDataProvider: this,

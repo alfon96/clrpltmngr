@@ -3,7 +3,7 @@
   "displayName": "PaletteGenTS",
   "description": "Welcome to the `PaletteGenTS` extension for VS Code, the first palette that sits right in your primary side-bar and who does not open annoying additional  windows. This extension provides a comprehensive color palette manager, designed to streamline and enhance your design and development workflow in Visual Studio Code.",
   "publisher": "alfonso-falcone",
-  "version": "0.0.21",
+  "version": "0.0.3",
   "engines": {
     "vscode": "^1.83.0"
   },

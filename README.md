@@ -31,16 +31,12 @@ Any identified issues or potential bugs will be listed here to keep users inform
 
 Stay updated with the improvements and fixes made to `clrpltmngr`:
 
-### 1.0.0
+### 0.0.1
 
 - Initial release of `clrpltmngr`.
 
-### 1.0.1
+### 0.0.3
 
-- Resolved issue #.
-
-### 1.1.0
-
-- Introduced features Automatic Tints and Shades Generation, Click and copy to get color hex value.
+- Resolved issue : same color added twice lead to displaying error.
 
 **Enjoy using `clrpltmngr`!**
