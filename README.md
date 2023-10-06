@@ -1,65 +1,46 @@
 # clrpltmngr README
 
-This is the README for your extension "clrpltmngr". After writing up a brief description, we recommend including the following sections.
+Welcome to the `clrpltmngr` extension for VS Code. This extension provides a comprehensive color palette manager, designed to streamline and enhance your design and development workflow in Visual Studio Code.
 
 ## Features
 
-Describe specific features of your extension including screenshots of your extension in action. Image paths are relative to this README file.
+Explore the powerful features of `clrpltmngr`:
 
-For example if there is an image subfolder under your extension project workspace:
+- **Automatic Tints and Shades Generation**: Enter a primary color and automatically generate 15 tints and 15 shades.
+  ![Automatic Tints and Shades Generation](img/add_new_color.png)
+  ![Automatic Tints and Shades Generation](img/result.png)
 
-\!\[feature X\]\(images/feature-x.png\)
-
-> Tip: Many popular extensions utilize animations. This is an excellent way to show off your extension! We recommend short, focused animations that are easy to follow.
+- **Click and copy to get color hex value**: Click on any color and you will copy the color's hex code in no time.
+  ![Click and copy color hex value](img/click-copy.png)
 
 ## Requirements
 
-If you have any requirements or dependencies, add a section describing those and how to install and configure them.
+`clrpltmngr` runs seamlessly with no additional requirements. However, if future versions incorporate dependencies, they will be listed in this section.
 
 ## Extension Settings
 
-Include if your extension adds any VS Code settings through the `contributes.configuration` extension point.
+`clrpltmngr` integrates the following settings for a tailored user experience:
 
-For example:
-
-This extension contributes the following settings:
-
-* `myExtension.enable`: Enable/disable this extension.
-* `myExtension.thing`: Set to `blah` to do something.
+- `clrpltmngr.enable`: Toggle the extension on/off.
 
 ## Known Issues
 
-Calling out known issues can help limit users opening duplicate issues against your extension.
+Any identified issues or potential bugs will be listed here to keep users informed.
 
 ## Release Notes
 
-Users appreciate release notes as you update your extension.
+Stay updated with the improvements and fixes made to `clrpltmngr`:
 
 ### 1.0.0
 
-Initial release of ...
+- Initial release of `clrpltmngr`.
 
 ### 1.0.1
 
-Fixed issue #.
+- Resolved issue #.
 
 ### 1.1.0
 
-Added features X, Y, and Z.
+- Introduced features Automatic Tints and Shades Generation, Click and copy to get color hex value.
 
----
-
-## Working with Markdown
-
-You can author your README using Visual Studio Code.  Here are some useful editor keyboard shortcuts:
-
-* Split the editor (`Cmd+\` on macOS or `Ctrl+\` on Windows and Linux)
-* Toggle preview (`Shift+Cmd+V` on macOS or `Shift+Ctrl+V` on Windows and Linux)
-* Press `Ctrl+Space` (Windows, Linux, macOS) to see a list of Markdown snippets
-
-## For more information
-
-* [Visual Studio Code's Markdown Support](http://code.visualstudio.com/docs/languages/markdown)
-* [Markdown Syntax Reference](https://help.github.com/articles/markdown-basics/)
-
-**Enjoy!**
+**Enjoy using `clrpltmngr`!**
