@@ -1,7 +1,7 @@
 {
   "name": "clrpltmngr",
-  "displayName": "ColorPalette Generator",
-  "description": "Welcome to the `PaletteGenTS` extension for VS Code, the first palette that sits right in your primary side-bar and who does not open annoying additional  windows. This extension provides a comprehensive color palette manager, designed to streamline and enhance your design and development workflow in Visual Studio Code.",
+  "displayName": "Color Palette Generator",
+  "description": "Welcome to the `Color Palette Generator` extension for VS Code, the first palette that sits right in your primary side-bar and who does not open annoying additional  windows. This extension provides a comprehensive color palette manager, designed to streamline and enhance your design and development workflow in Visual Studio Code.",
   "publisher": "alfonso-falcone",
   "version": "0.0.3",
   "engines": {
