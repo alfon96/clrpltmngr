@@ -1,7 +1,8 @@
 {
-  "name": "clrpltmngr",
+  "name": "color_palette_manager",
   "displayName": "color_palette_manager",
-  "description": "Some description",
+  "description": "Welcome to the `clrpltmngr` extension for VS Code. This extension provides a comprehensive color palette manager, designed to streamline and enhance your design and development workflow in Visual Studio Code.",
+  "publisher": "alfonso-falcone",
   "version": "0.0.1",
   "engines": {
     "vscode": "^1.83.0"
@@ -74,5 +75,9 @@
     "mocha": "^10.2.0",
     "typescript": "^5.2.2",
     "@vscode/test-electron": "^2.3.4"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/alfon96/clrpltmngr.git"
   }
 }
