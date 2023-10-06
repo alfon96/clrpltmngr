@@ -3,7 +3,7 @@
   "displayName": "Color Palette Generator",
   "description": "Welcome to the `Color Palette Generator` extension for VS Code, the first palette that sits right in your primary side-bar and who does not open annoying additional  windows. This extension provides a comprehensive color palette manager, designed to streamline and enhance your design and development workflow in Visual Studio Code.",
   "publisher": "alfonso-falcone",
-  "version": "0.0.31",
+  "version": "0.0.41",
   "engines": {
     "vscode": "^1.83.0"
   },
@@ -19,7 +19,7 @@
       "activitybar": [
         {
           "id": "colorSquares",
-          "title": "Color Squares",
+          "title": "Color Palette Generator",
           "icon": "icon.png"
         }
       ]
