@@ -127,11 +127,17 @@ function activate(context) {
 
   vscode.commands.registerCommand("scanDocumentForColors", () => {
     const colorsInUse = scanAndCategorizeColors();
-    storeUsedColors(
-      colorDataProviderColorsInUse,
-      colorsInUse,
-      treeViewColorsInUse
-    );
+    if (colorsInUse) {
+      storeUsedColors(
+        colorDataProviderColorsInUse,
+        colorsInUse,
+        treeViewColorsInUse
+      );
+    } else {
+      vscode.window.showInformationMessage(
+        `No colors found in your code. Make sure you use hex code for your colors`
+      );
+    }
   });
 }
 
