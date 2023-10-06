@@ -127,16 +127,14 @@ function activate(context) {
 
   vscode.commands.registerCommand("scanDocumentForColors", () => {
     const colorsInUse = scanAndCategorizeColors();
-    if (colorsInUse) {
+    if (colorsInUse.length != 0) {
       storeUsedColors(
         colorDataProviderColorsInUse,
         colorsInUse,
         treeViewColorsInUse
       );
     } else {
-      vscode.window.showInformationMessage(
-        `No colors found in your code. Make sure you use hex code for your colors`
-      );
+      vscode.window.showInformationMessage(`No colors found!`);
     }
   });
 }
@@ -207,6 +205,7 @@ function addColorsToSection(
   );
 }
 
+// SQUARES
 function getPngDataUriForColor(color) {
   const png = new PNG({ width: 24, height: 24 });
   const hex = color.substring(1);
@@ -227,6 +226,40 @@ function getPngDataUriForColor(color) {
   const buffer = PNG.sync.write(png);
   return `data:image/png;base64,${buffer.toString("base64")}`;
 }
+
+// Circle
+// function getPngDataUriForColor(color) {
+//   const png = new PNG({ width: 24, height: 24 });
+//   const hex = color.substring(1);
+//   const rgb = {
+//     r: parseInt(hex.substring(0, 2), 16),
+//     g: parseInt(hex.substring(2, 4), 16),
+//     b: parseInt(hex.substring(4, 6), 16),
+//   };
+//   const centerX = png.width / 2;
+//   const centerY = png.height / 2;
+//   const radius = Math.min(centerX, centerY);
+
+//   for (let y = 0; y < png.height; y++) {
+//     for (let x = 0; x < png.width; x++) {
+//       const idx = (png.width * y + x) << 2;
+//       const distance = Math.sqrt((x - centerX) ** 2 + (y - centerY) ** 2);
+
+//       if (distance <= radius) {
+//         png.data[idx] = rgb.r;
+//         png.data[idx + 1] = rgb.g;
+//         png.data[idx + 2] = rgb.b;
+//         png.data[idx + 3] = 255;
+//       } else {
+//         // Set transparent outside the circle
+//         png.data[idx + 3] = 0;
+//       }
+//     }
+//   }
+
+//   const buffer = PNG.sync.write(png);
+//   return `data:image/png;base64,${buffer.toString("base64")}`;
+// }
 
 function hexToRgb(hex) {
   let bigint = parseInt(hex.substring(1), 16);
@@ -249,12 +282,48 @@ function luminance({ r, g, b }) {
   return 0.2126 * R + 0.7152 * G + 0.0722 * B;
 }
 
+function extractHexColors(inputStr) {
+  let hexColors = [];
+
+  // Find all matches for hex and rgb colors.
+  const hexMatches = inputStr.match(/#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})/g);
+  const rgbMatches = inputStr.match(
+    /rgba?\((\d{1,3}),\s*(\d{1,3}),\s*(\d{1,3})/g
+  );
+
+  // Convert short hex colors to full version.
+  if (hexMatches) {
+    for (let hex of hexMatches) {
+      if (hex.length === 4) {
+        let r = hex[1];
+        let g = hex[2];
+        let b = hex[3];
+        hex = `#${r}${r}${g}${g}${b}${b}`;
+      }
+      hexColors.push(hex);
+    }
+  }
+
+  // Convert rgb(a) values to hex.
+  if (rgbMatches) {
+    for (let rgb of rgbMatches) {
+      const nums = rgb.match(/\d+/g);
+      const r = parseInt(nums[0], 10).toString(16).padStart(2, "0");
+      const g = parseInt(nums[1], 10).toString(16).padStart(2, "0");
+      const b = parseInt(nums[2], 10).toString(16).padStart(2, "0");
+      hexColors.push(`#${r}${g}${b}`);
+    }
+  }
+
+  return hexColors;
+}
+
 function scanAndCategorizeColors() {
   const activeEditor = vscode.window.activeTextEditor;
   if (activeEditor) {
     const docText = activeEditor.document.getText();
-    const hexRegex = /#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})/g;
-    return [...new Set(docText.match(hexRegex))];
+
+    return extractHexColors(docText);
   }
 }
 
@@ -322,6 +391,7 @@ class ColorSquaresProvider {
         g: Math.round(baseRgb.g + (255 - baseRgb.g) * factor * i),
         b: Math.round(baseRgb.b + (255 - baseRgb.b) * factor * i),
       };
+
       this.colors["Tints"].push(
         rgbToHex(tintColor.r, tintColor.g, tintColor.b)
       );
