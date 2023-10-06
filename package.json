@@ -27,8 +27,16 @@
     "views": {
       "colorSquares": [
         {
-          "id": "colorSquaresView",
-          "name": "Color Squares"
+          "id": "colorSquaresViewTintsAndShades",
+          "name": "Generate Tints And Shades"
+        },
+        {
+          "id": "colorSquaresViewOthers",
+          "name": "Others"
+        },
+        {
+          "id": "colorSquaresViewColorsInUse",
+          "name": "Colors In Use"
         }
       ]
     },
@@ -36,7 +44,7 @@
       "view/item/context": [
         {
           "command": "deleteColor",
-          "when": "view == colorSquaresView && viewItem == color",
+          "when": "(view == colorSquaresViewTintsAndShades || view == colorSquaresViewOthers || view == colorSquaresViewColorsInUse) && viewItem == color",
           "group": "1_modification",
           "arguments": [
             "${1:id}",
