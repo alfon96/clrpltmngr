@@ -1,0 +1,78 @@
+{
+  "name": "clrpltmngr",
+  "displayName": "color_palette_manager",
+  "description": "Some description",
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.83.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "main": "./extension.js",
+  "contributes": {
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "colorSquares",
+          "title": "Color Squares",
+          "icon": "icon.png"
+        }
+      ]
+    },
+    "views": {
+      "colorSquares": [
+        {
+          "id": "colorSquaresView",
+          "name": "Color Squares"
+        }
+      ]
+    },
+    "menus": {
+      "view/item/context": [
+        {
+          "command": "deleteColor",
+          "when": "view == colorSquaresView && viewItem == color",
+          "group": "1_modification",
+          "arguments": [
+            "${1:id}",
+            "${1:label}"
+          ]
+        }
+      ]
+    },
+    "commands": [
+      {
+        "command": "copyColorToClipboard",
+        "title": "Copy Color to Clipboard"
+      },
+      {
+        "command": "addNewColor",
+        "title": "Add New Color"
+      },
+      {
+        "command": "deleteColor",
+        "title": "Delete Color"
+      }
+    ]
+  },
+  "icon": "icon.png",
+  "scripts": {
+    "lint": "eslint .",
+    "pretest": "npm run lint",
+    "test": "node ./test/runTest.js"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.83.0",
+    "@types/mocha": "^10.0.2",
+    "@types/node": "18.x",
+    "eslint": "^8.50.0",
+    "glob": "^10.3.3",
+    "mocha": "^10.2.0",
+    "typescript": "^5.2.2",
+    "@vscode/test-electron": "^2.3.4"
+  }
+}
