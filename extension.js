@@ -44,6 +44,16 @@ function activate(context) {
     vscode.window.showInformationMessage(`Copied ${color} to clipboard!`);
   });
 
+  vscode.commands.registerCommand("resetColorsInUse", (section) => {
+    if (section === "GenerateTintsAndShades") {
+      handleReset(colorDataProviderTintsAndShades, treeViewTS, section);
+    } else if (section === "ColorsInUse") {
+      handleReset(colorDataProviderColorsInUse, treeViewColorsInUse, section);
+    } else if (section === "Others") {
+      handleReset(colorDataProviderOthers, treeViewOthers, section);
+    }
+  });
+
   vscode.commands.registerCommand("addNewColor", async (item) => {
     const hexColorRegex = /^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/;
 
@@ -139,7 +149,59 @@ function activate(context) {
   });
 }
 
+function handleReset(colorDataProviderTintsAndShades, treeViewTS, section) {
+  const sections = colorDataProviderTintsAndShades.reset();
+
+  // Object.keys(sections).map((item) =>
+  //   treeViewTS.reveal(sections[item], {
+  //     expand: false,
+  //   })
+  // );
+
+  vscode.window.showInformationMessage(
+    `The Section ${section} has been reset!`
+  );
+}
+
+function sortColorsByBrightness(colors) {
+  return colors.sort((colorA, colorB) => {
+    const luminanceA = luminance(hexToRgb(colorA));
+    const luminanceB = luminance(hexToRgb(colorB));
+    return luminanceB - luminanceA; // for brightest to darkest
+  });
+}
+
+function sortColorsByDarkness(colors) {
+  return colors.sort((colorA, colorB) => {
+    const luminanceA = luminance(hexToRgb(colorA));
+    const luminanceB = luminance(hexToRgb(colorB));
+    return luminanceA - luminanceB; // for darkest to brightest
+  });
+}
+
+function splitAndSortColors(colors, inputColor) {
+  const inputLuminance = luminance(hexToRgb(inputColor));
+
+  // Split colors based on the input color's luminance
+  const darkerColors = colors.filter(
+    (color) => luminance(hexToRgb(color)) <= inputLuminance
+  );
+  const brighterColors = colors.filter(
+    (color) => luminance(hexToRgb(color)) > inputLuminance
+  );
+
+  // Sort each list
+  const sortedDarker = sortColorsByBrightness(darkerColors);
+  const sortedBrighter = sortColorsByDarkness(brighterColors);
+
+  return {
+    darker: sortedDarker,
+    brighter: sortedBrighter,
+  };
+}
+
 function storeUsedColors(colorDataProvider, colorsFound, treeView) {
+  colorsFound = sortColorsByBrightness(colorsFound);
   if (colorDataProvider.colors["UsedPrimaryColors"].length === 0) {
     colorsFound.forEach((color) => {
       addColorsToSection(colorDataProvider, color, treeView, "Others");
@@ -148,37 +210,30 @@ function storeUsedColors(colorDataProvider, colorsFound, treeView) {
       `Colors Retrived! For a better experience, choose a Primary Color.`
     );
   } else {
-    const primaryLuminance = luminance(
-      hexToRgb(colorDataProvider.colors["UsedPrimaryColors"][0] || "#FFFFFF")
-    );
-
     colorDataProvider.colors["UsedTints"] = [];
     colorDataProvider.colors["UsedShades"] = [];
-    colorsFound.forEach((color) => {
-      const colorLuminance = luminance(hexToRgb(color));
 
-      if (color === colorDataProvider.colors["UsedPrimaryColors"][0]) {
-        addColorsToSection(
-          colorDataProvider,
-          color,
-          treeView,
-          "UsedPrimaryColors"
-        );
-      } else if (colorLuminance > primaryLuminance) {
-        addColorsToSection(colorDataProvider, color, treeView, "UsedTints");
-      } else if (colorLuminance < primaryLuminance) {
-        addColorsToSection(colorDataProvider, color, treeView, "UsedShades");
-      }
-      colorDataProvider.colors["Others"] = colorDataProvider.colors[
-        "Others"
-      ].filter((color) => {
-        // Check if the color is not in UsedTints or UsedShades
-        return (
-          !colorDataProvider.colors["UsedTints"].includes(color) &&
-          !colorDataProvider.colors["UsedShades"].includes(color) &&
-          !colorDataProvider.colors["UsedPrimaryColors"].includes(color)
-        );
-      });
+    const primaryColor = colorDataProvider.colors["UsedPrimaryColors"][0];
+    const { darker: shades, brighter: tints } = splitAndSortColors(
+      colorsFound,
+      primaryColor
+    );
+    shades.map((shade) =>
+      addColorsToSection(colorDataProvider, shade, treeView, "UsedShades")
+    );
+    tints.map((tint) =>
+      addColorsToSection(colorDataProvider, tint, treeView, "UsedTints")
+    );
+
+    colorDataProvider.colors["Others"] = colorDataProvider.colors[
+      "Others"
+    ].filter((color) => {
+      // Check if the color is not in UsedTints or UsedShades
+      return (
+        !colorDataProvider.colors["UsedTints"].includes(color) &&
+        !colorDataProvider.colors["UsedShades"].includes(color) &&
+        !colorDataProvider.colors["UsedPrimaryColors"].includes(color)
+      );
     });
 
     vscode.window.showInformationMessage(
@@ -227,40 +282,6 @@ function getPngDataUriForColor(color) {
   return `data:image/png;base64,${buffer.toString("base64")}`;
 }
 
-// Circle
-// function getPngDataUriForColor(color) {
-//   const png = new PNG({ width: 24, height: 24 });
-//   const hex = color.substring(1);
-//   const rgb = {
-//     r: parseInt(hex.substring(0, 2), 16),
-//     g: parseInt(hex.substring(2, 4), 16),
-//     b: parseInt(hex.substring(4, 6), 16),
-//   };
-//   const centerX = png.width / 2;
-//   const centerY = png.height / 2;
-//   const radius = Math.min(centerX, centerY);
-
-//   for (let y = 0; y < png.height; y++) {
-//     for (let x = 0; x < png.width; x++) {
-//       const idx = (png.width * y + x) << 2;
-//       const distance = Math.sqrt((x - centerX) ** 2 + (y - centerY) ** 2);
-
-//       if (distance <= radius) {
-//         png.data[idx] = rgb.r;
-//         png.data[idx + 1] = rgb.g;
-//         png.data[idx + 2] = rgb.b;
-//         png.data[idx + 3] = 255;
-//       } else {
-//         // Set transparent outside the circle
-//         png.data[idx + 3] = 0;
-//       }
-//     }
-//   }
-
-//   const buffer = PNG.sync.write(png);
-//   return `data:image/png;base64,${buffer.toString("base64")}`;
-// }
-
 function hexToRgb(hex) {
   let bigint = parseInt(hex.substring(1), 16);
   let r = (bigint >> 16) & 255;
@@ -285,13 +306,13 @@ function luminance({ r, g, b }) {
 function extractHexColors(inputStr) {
   let hexColors = [];
 
-  // Find all matches for hex and rgb colors.
-  const hexMatches = inputStr.match(/#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})/g);
+  const hexMatches = inputStr.match(
+    /#([0-9a-fA-F]{6}|(?<![\dA-Fa-f])[0-9a-fA-F]{3}(?![\dA-Fa-f]))/g
+  );
   const rgbMatches = inputStr.match(
-    /rgba?\((\d{1,3}),\s*(\d{1,3}),\s*(\d{1,3})/g
+    /rgba?\((\d{1,3}),\s*(\d{1,3}),\s*(\d{1,3})(?:,\s*([\d.]+))?\)/g
   );
 
-  // Convert short hex colors to full version.
   if (hexMatches) {
     for (let hex of hexMatches) {
       if (hex.length === 4) {
@@ -304,7 +325,6 @@ function extractHexColors(inputStr) {
     }
   }
 
-  // Convert rgb(a) values to hex.
   if (rgbMatches) {
     for (let rgb of rgbMatches) {
       const nums = rgb.match(/\d+/g);
@@ -343,6 +363,17 @@ class ColorSquaresProvider {
       this.colors[category] = [];
     }
   }
+
+  reset() {
+    Object.keys(this.colors).map((section) => {
+      this.colors[section] = [];
+      this.setIsExpanded(false, section);
+    });
+
+    this._onDidChangeTreeData.fire();
+    return this.items;
+  }
+
   setIsExpanded(expanded, category) {
     this.isExpanded[category] = expanded;
   }
@@ -445,6 +476,13 @@ class ColorSquaresProvider {
           title: "Scan Document for Colors",
         };
         categories.push(scanColorsItem);
+        const resetColors = new vscode.TreeItem("Reset");
+        resetColors.command = {
+          command: "resetColorsInUse",
+          title: "Reset In Use Colors",
+          arguments: [this.section],
+        };
+        categories.push(resetColors);
       }
       return categories;
     } else if (this.colors[element.label]) {
@@ -493,3 +531,37 @@ class ColorSquaresProvider {
 function deactivate() {}
 
 module.exports = { activate, deactivate };
+
+// Circle
+// function getPngDataUriForColor(color) {
+//   const png = new PNG({ width: 24, height: 24 });
+//   const hex = color.substring(1);
+//   const rgb = {
+//     r: parseInt(hex.substring(0, 2), 16),
+//     g: parseInt(hex.substring(2, 4), 16),
+//     b: parseInt(hex.substring(4, 6), 16),
+//   };
+//   const centerX = png.width / 2;
+//   const centerY = png.height / 2;
+//   const radius = Math.min(centerX, centerY);
+
+//   for (let y = 0; y < png.height; y++) {
+//     for (let x = 0; x < png.width; x++) {
+//       const idx = (png.width * y + x) << 2;
+//       const distance = Math.sqrt((x - centerX) ** 2 + (y - centerY) ** 2);
+
+//       if (distance <= radius) {
+//         png.data[idx] = rgb.r;
+//         png.data[idx + 1] = rgb.g;
+//         png.data[idx + 2] = rgb.b;
+//         png.data[idx + 3] = 255;
+//       } else {
+//         // Set transparent outside the circle
+//         png.data[idx + 3] = 0;
+//       }
+//     }
+//   }
+
+//   const buffer = PNG.sync.write(png);
+//   return `data:image/png;base64,${buffer.toString("base64")}`;
+// }
