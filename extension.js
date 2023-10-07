@@ -214,6 +214,7 @@ function storeUsedColors(colorDataProvider, colorsFound, treeView) {
     colorDataProvider.colors["UsedShades"] = [];
 
     const primaryColor = colorDataProvider.colors["UsedPrimaryColors"][0];
+    colorsFound = colorsFound.filter((color) => color != primaryColor);
     const { darker: shades, brighter: tints } = splitAndSortColors(
       colorsFound,
       primaryColor
